@@ -39,3 +39,12 @@ class Cell:
             self._win.draw_line(Line(Point(x1, y1), Point(x2, y1)), "black")
         if self.has_bottom_wall:
             self._win.draw_line(Line(Point(x1, y2), Point(x2, y2)), "black")
+
+    def draw_move(self, to_cell, undo=False):
+        point1 = Point((self._x1 + self._x2) / 2, (self._y1 + self._y2) / 2)
+        point2 = Point((to_cell._x1 + to_cell._x2) / 2, (to_cell._y1 + to_cell._y2) / 2)
+        if undo:
+            color = "red"
+        else:
+            color = "gray"
+        self._win.draw_line(Line(point1, point2), "gray")
