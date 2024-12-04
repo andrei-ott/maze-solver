@@ -14,7 +14,7 @@ class Line():
 
 
 class Cell:
-    def __init__(self, win):
+    def __init__(self, win=None):
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
@@ -31,6 +31,9 @@ class Cell:
         self._y1 = y1
         self._y2 = y2
 
+        if self._win is None:
+            return
+
         if self.has_left_wall:
             self._win.draw_line(Line(Point(x1, y1), Point(x1, y2)), "black")
         if self.has_right_wall:
@@ -41,6 +44,9 @@ class Cell:
             self._win.draw_line(Line(Point(x1, y2), Point(x2, y2)), "black")
 
     def draw_move(self, to_cell, undo=False):
+        if self._win is None:
+            return
+        
         point1 = Point((self._x1 + self._x2) / 2, (self._y1 + self._y2) / 2)
         point2 = Point((to_cell._x1 + to_cell._x2) / 2, (to_cell._y1 + to_cell._y2) / 2)
         if undo:
