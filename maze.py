@@ -37,9 +37,9 @@ class Maze():
             self._cells.append([])
             for j in range(self._num_rows):
                 self._cells[i].append(Cell(self._win))
-                self._draw_cell(i, j)
+                self._draw_cell(i, j, 0.0005)
 
-    def _draw_cell(self, i, j):
+    def _draw_cell(self, i, j, wait_time = 0.005):
         if self._win is None:
             return
 
@@ -50,11 +50,11 @@ class Maze():
 
         self._cells[i][j].draw(x1, y1, x2, y2)
 
-        self._animate()
+        self._animate(wait_time)
     
-    def _animate(self):
+    def _animate(self, wait_time = 0.05):
         self._win.redraw()
-        time.sleep(0.005)
+        time.sleep(wait_time)
 
     def _break_entrance_and_exit(self):
         self._cells[0][0].has_top_wall = False
@@ -106,4 +106,39 @@ class Maze():
         for i in range(self._num_cols):
             for j in range(self._num_rows):
                 self._cells[i][j].visited = False
+
+    def solve(self):
+        return self._solve_r(0, 0)
+
+    def _solve_r(self, i, j):
+        cell = self._cells[i][j]
+        cell.visited = True
+
+        if i == self._num_cols - 1 and j == self._num_rows - 1:
+            return True
+        
+        to_visit = []
+        if i > 0 and not self._cells[i - 1][j].visited and not cell.has_left_wall:
+            to_visit.append((i - 1, j))
+        if j > 0 and not self._cells[i][j - 1].visited and not cell.has_top_wall:
+            to_visit.append((i, j - 1))
+        if i < self._num_cols - 1 and not self._cells[i + 1][j].visited and not cell.has_right_wall:
+            to_visit.append((i + 1, j))
+        if j < self._num_rows - 1 and not self._cells[i][j + 1].visited and not cell.has_bottom_wall:
+            to_visit.append((i, j + 1))
+
+        for next_cell_info in to_visit:
+            next_cell = self._cells[next_cell_info[0]][next_cell_info[1]]
+
+            cell.draw_move(next_cell)
+            self._animate()
+
+            result = self._solve_r(next_cell_info[0], next_cell_info[1])
+            if result:
+                return True
+            
+            cell.draw_move(next_cell, True)
+            self._animate()
+
+        return False
             

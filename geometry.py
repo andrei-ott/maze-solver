@@ -62,8 +62,8 @@ class Cell:
         
         point1 = Point((self._x1 + self._x2) / 2, (self._y1 + self._y2) / 2)
         point2 = Point((to_cell._x1 + to_cell._x2) / 2, (to_cell._y1 + to_cell._y2) / 2)
-        if undo:
+        if not undo:
             color = "red"
         else:
             color = "gray"
-        self._win.draw_line(Line(point1, point2), "gray")
+        self._win.draw_line(Line(point1, point2), color)
